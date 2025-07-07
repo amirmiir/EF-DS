@@ -1,0 +1,37 @@
+include:
+  - docker-compose.base.yaml
+services:
+  legacy_service:
+    build:
+      context: ../legacy-app
+    container_name: legacy-container
+    environment:
+      DB_HOST: db_service
+      DB_PORT: 5432
+      DB_NAME: db
+      DB_USER: user
+      DB_PASSWORD: password
+    depends_on:
+      - db_service
+    ports:
+      - "8000:4000"
+
+  newmicro_service:
+    build:
+      context: ./newmicro_service
+    container_name: newmicro-container
+    environment:
+      DB_HOST: db_service
+      DB_PORT: 5432
+      DB_NAME: db
+      DB_USER: user
+      DB_PASSWORD: password
+    depends_on:
+      - db_service
+    ports:
+      - "8002:4173"
+
+networks:
+  default:
+    name: shared_net
+    external: true
